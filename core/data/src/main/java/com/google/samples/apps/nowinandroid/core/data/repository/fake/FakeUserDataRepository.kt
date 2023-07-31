@@ -16,6 +16,7 @@
 
 package com.google.samples.apps.nowinandroid.core.data.repository.fake
 
+import androidx.tracing.trace
 import com.google.samples.apps.nowinandroid.core.data.repository.UserDataRepository
 import com.google.samples.apps.nowinandroid.core.datastore.NiaPreferencesDataSource
 import com.google.samples.apps.nowinandroid.core.model.data.DarkThemeConfig

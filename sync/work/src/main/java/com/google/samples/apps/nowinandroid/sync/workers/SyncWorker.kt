@@ -18,6 +18,7 @@ package com.google.samples.apps.nowinandroid.sync.workers
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.tracing.trace
 import androidx.tracing.traceAsync
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo

@@ -17,6 +17,8 @@
 package com.google.samples.apps.nowinandroid.core.network.di
 
 import android.content.Context
+import android.util.Log
+import androidx.tracing.trace
 import coil.ImageLoader
 import coil.decode.SvgDecoder
 import coil.util.DebugLogger
@@ -60,6 +62,13 @@ object NetworkModule {
                     }
                 },
         )
+        .addInterceptor { chain ->
+            val request = chain.request()
+            Log.e("NETWORK", "NETWORK: ${request.url}")
+            trace("NETWORK: ${request.url}".take(126)) {
+                chain.proceed(request)
+            }
+        }
         .build()
 
     /**

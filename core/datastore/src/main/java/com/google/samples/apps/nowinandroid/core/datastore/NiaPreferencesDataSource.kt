@@ -17,6 +17,7 @@
 package com.google.samples.apps.nowinandroid.core.datastore
 
 import android.util.Log
+import androidx.core.os.trace
 import androidx.datastore.core.DataStore
 import com.google.samples.apps.nowinandroid.core.model.data.DarkThemeConfig
 import com.google.samples.apps.nowinandroid.core.model.data.ThemeBrand
@@ -62,10 +63,12 @@ class NiaPreferencesDataSource @Inject constructor(
     suspend fun setFollowedTopicIds(topicIds: Set<String>) {
         try {
             userPreferences.updateData {
-                it.copy {
-                    followedTopicIds.clear()
-                    followedTopicIds.putAll(topicIds.associateWith { true })
-                    updateShouldHideOnboardingIfNecessary()
+                trace("setFollwedTopicIds") {
+                    it.copy {
+                        followedTopicIds.clear()
+                        followedTopicIds.putAll(topicIds.associateWith { true })
+                        updateShouldHideOnboardingIfNecessary()
+                    }
                 }
             }
         } catch (ioException: IOException) {
@@ -75,14 +78,16 @@ class NiaPreferencesDataSource @Inject constructor(
 
     suspend fun toggleFollowedTopicId(topicId: String, followed: Boolean) {
         try {
-            userPreferences.updateData {
-                it.copy {
-                    if (followed) {
-                        followedTopicIds.put(topicId, true)
-                    } else {
-                        followedTopicIds.remove(topicId)
+            trace("toggleFollwedTopicIds") {
+                userPreferences.updateData {
+                    it.copy {
+                        if (followed) {
+                            followedTopicIds.put(topicId, true)
+                        } else {
+                            followedTopicIds.remove(topicId)
+                        }
+                        updateShouldHideOnboardingIfNecessary()
                     }
-                    updateShouldHideOnboardingIfNecessary()
                 }
             }
         } catch (ioException: IOException) {
@@ -103,8 +108,10 @@ class NiaPreferencesDataSource @Inject constructor(
 
     suspend fun setDynamicColorPreference(useDynamicColor: Boolean) {
         userPreferences.updateData {
-            it.copy {
-                this.useDynamicColor = useDynamicColor
+            trace("setDynamicColorPreference") {
+                it.copy {
+                    this.useDynamicColor = useDynamicColor
+                }
             }
         }
     }
@@ -144,12 +151,14 @@ class NiaPreferencesDataSource @Inject constructor(
 
     suspend fun setNewsResourcesViewed(newsResourceIds: List<String>, viewed: Boolean) {
         userPreferences.updateData { prefs ->
-            prefs.copy {
-                newsResourceIds.forEach { id ->
-                    if (viewed) {
-                        viewedNewsResourceIds.put(id, true)
-                    } else {
-                        viewedNewsResourceIds.remove(id)
+            trace("setNewsResourceViewed") {
+                prefs.copy {
+                    newsResourceIds.forEach { id ->
+                        if (viewed) {
+                            viewedNewsResourceIds.put(id, true)
+                        } else {
+                            viewedNewsResourceIds.remove(id)
+                        }
                     }
                 }
             }

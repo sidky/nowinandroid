@@ -16,6 +16,7 @@
 
 package com.google.samples.apps.nowinandroid.core.data.repository
 
+import androidx.tracing.trace
 import com.google.samples.apps.nowinandroid.core.database.dao.NewsResourceDao
 import com.google.samples.apps.nowinandroid.core.database.dao.NewsResourceFtsDao
 import com.google.samples.apps.nowinandroid.core.database.dao.TopicDao
@@ -52,9 +53,21 @@ class DefaultSearchContentsRepository @Inject constructor(
                     useFilterNewsIds = false,
                 )
                     .first()
-                    .map(PopulatedNewsResource::asFtsEntity),
+                    .map {
+                        trace("PopulatedNewsResource_asFtsEntity") {
+                            it.asFtsEntity()
+                        }
+                    },
             )
-            topicFtsDao.insertAll(topicDao.getOneOffTopicEntities().map { it.asFtsEntity() })
+            topicFtsDao.insertAll(
+                topicDao
+                    .getOneOffTopicEntities()
+                    .map {
+                        trace("convertToFtsEntity") {
+                            it.asFtsEntity()
+                        }
+                    }
+            )
         }
     }
 

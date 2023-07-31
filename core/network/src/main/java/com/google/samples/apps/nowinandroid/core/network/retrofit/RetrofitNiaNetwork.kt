@@ -16,6 +16,7 @@
 
 package com.google.samples.apps.nowinandroid.core.network.retrofit
 
+import android.util.Log
 import com.google.samples.apps.nowinandroid.core.network.BuildConfig
 import com.google.samples.apps.nowinandroid.core.network.NiaNetworkDataSource
 import com.google.samples.apps.nowinandroid.core.network.model.NetworkChangeList
@@ -57,7 +58,7 @@ private interface RetrofitNiaNetworkApi {
     ): List<NetworkChangeList>
 }
 
-private const val NiaBaseUrl = BuildConfig.BACKEND_URL
+private const val NiaBaseUrl = BuildConfig.BACKEND_URL + ":8080"
 
 /**
  * Wrapper for data provided from the [NiaBaseUrl]
@@ -75,6 +76,10 @@ class RetrofitNiaNetwork @Inject constructor(
     networkJson: Json,
     okhttpCallFactory: Call.Factory,
 ) : NiaNetworkDataSource {
+
+    init {
+        Log.e("NETWORK", "URL: $NiaBaseUrl")
+    }
 
     private val networkApi = Retrofit.Builder()
         .baseUrl(NiaBaseUrl)
